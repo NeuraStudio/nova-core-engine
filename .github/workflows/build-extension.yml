@@ -1,0 +1,34 @@
+name: Build Nova VS Code Extension
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install VSCE Compiler
+      run: npm install -g @vscode/vsce
+
+    - name: Build the VSIX Package
+      run: |
+        cd 5_Nova_IDE_Extensions/vscode-nova
+        # Adding a dummy README to prevent VSCE warnings
+        echo "# Nova Script Extension" > README.md
+        vsce package
+
+    - name: Upload Valid VSIX Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Valid-Nova-Extension
+        path: 5_Nova_IDE_Extensions/vscode-nova/*.vsix
