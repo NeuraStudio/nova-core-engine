@@ -15,7 +15,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
+        node-version: '20.x'
 
     - name: Install VSCE Compiler
       run: npm install -g @vscode/vsce
@@ -23,7 +23,6 @@ jobs:
     - name: Build the VSIX Package
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
-        # Adding a dummy README to prevent VSCE warnings
         echo "# Nova Script Extension" > README.md
         vsce package
 
