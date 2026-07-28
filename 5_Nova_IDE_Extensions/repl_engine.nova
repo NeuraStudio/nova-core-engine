@@ -1,0 +1,73 @@
+// ═══════════════════════════════════════════════
+// MODULE: Nova REPL (Read-Eval-Print Loop)
+// ENGINE: Nova Interactive Shell
+// ═══════════════════════════════════════════════
+
+import Nova.2_Nova_VM.NovaInterpreter
+
+module NovaREPL {
+
+    function Start() {
+        Nova.show("\033[0;32m") // Hacker Green Color
+        Nova.show(" ███╗   ██╗ ██████╗ ██╗   ██╗ █████╗ ")
+        Nova.show(" ████╗  ██║██╔═══██╗██║   ██║██╔══██╗")
+        Nova.show(" ██╔██╗ ██║██║   ██║██║   ██║███████║")
+        Nova.show(" ██║╚██╗██║██║   ██║╚██╗ ██╔╝██╔══██║")
+        Nova.show(" ██║ ╚████║╚██████╔╝ ╚████╔╝ ██║  ██║")
+        Nova.show(" ╚═╝  ╚═══╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝")
+        Nova.show("\033[0;36m         Developed by Neura Studio\033[0m")
+        Nova.show("\033[0;32m════════════════════════════════════════════════════════\033[0m")
+        Nova.show("Nova Script V1.0.0 (Direct Silicon Mode Active)")
+        Nova.show("Type 'help', 'copyright', 'credits' or 'license' for more info.")
+        Nova.show("Type 'exit' to terminate the Silicon Core Connection.")
+        Nova.show("\033[0;32m════════════════════════════════════════════════════════\033[0m")
+
+        buffer = ""
+        is_multiline = false
+        open_brackets = 0
+
+        while true {
+            // Prompt styling: '>>>' for normal, '...' for multiline
+            prompt = is_multiline ? "... " : ">>> "
+            input = Nova.system.read_line(prompt)
+
+            // Core Commands
+            if input == "exit" {
+                Nova.show("Terminating Silicon Connection... Goodbye.")
+                break
+            } else if input == "help" {
+                ShowHelp()
+                continue
+            } else if input == "copyright" {
+                Nova.show("Copyright (c) 2026 Neura Studio. All Rights Reserved.")
+                continue
+            }
+
+            // Multi-line Logic (Checking { and })
+            open_brackets = open_brackets + input.count("{") - input.count("}")
+            buffer = buffer + input + "\n"
+
+            if open_brackets > 0 {
+                is_multiline = true
+            } else {
+                // Execute the buffer when brackets are closed
+                is_multiline = false
+                try {
+                    NovaInterpreter.RunLive(buffer)
+                } catch(err) {
+                    Nova.show("\033[0;31m[ERROR]\033[0m " + err)
+                }
+                buffer = "" // Clear buffer after execution
+            }
+        }
+    }
+
+    function ShowHelp() {
+        Nova.show("\033[0;36m--- Nova Script Help ---")
+        Nova.show("This is the Interactive Silicon Shell.")
+        Nova.show("You can write single-line or multi-line code.")
+        Nova.show("Modules available natively: @Hacker, @AI, @Web")
+        Nova.show("Example: Nova.show('Hello World')\033[0m")
+    }
+}
+export NovaREPL

@@ -1,0 +1,72 @@
+// ═══════════════════════════════════════════════
+// MODULE: Nova OS Engine (Direct Hardware & Kernel)
+// ENGINE: Nova Standard Library
+// ═══════════════════════════════════════════════
+
+import Nova.1_Nova_Silicon_Core.PulseEmitter
+import Nova.3_Nova_Syntax.ErrorHandler
+
+module NovaOS {
+
+    // ---------------------------------------------------------
+    // KERNEL PROCESS SCHEDULER (Multi-threading on CPU Cores)
+    // ---------------------------------------------------------
+    class ProcessScheduler {
+        const MAX_CORES = 128
+        active_threads = []
+
+        function SpawnProcess(process_name, code_block) {
+            Nova.show("⚙️ Kernel: Spawning native process -> " + process_name)
+            thread ProcessWorker {
+                unsafe {
+                    // Allocating dedicated CPU Core
+                    core_id = Nova.hardware.getAvailableCore()
+                    Nova.memory.lock_core(core_id)
+                    code_block()
+                    Nova.memory.unlock_core(core_id)
+                }
+            }
+            active_threads.add(ProcessWorker)
+        }
+    }
+
+    // ---------------------------------------------------------
+    // NATIVE FILE SYSTEM (Bypassing Windows/Linux NTFS/EXT4)
+    // ---------------------------------------------------------
+    class FileSystem {
+        function FormatDrive(drive_id, format_type) {
+            if format_type == "NOVA_FS" {
+                unsafe {
+                    Nova.show("⚠️ Formatting Drive " + drive_id + " to NOVA_FS at Silicon Level...")
+                    PulseEmitter.emit_pulse(drive_id.master_boot_record, false) // Wipe
+                }
+                return true
+            }
+        }
+
+        function WriteDirect(sector, data) {
+            unsafe {
+                // Direct Disk Sector Writing (Extremely Fast, Dangerous if misused)
+                hardware_addr = Nova.hardware.getDiskSectorAddress(sector)
+                Nova.memory.write(hardware_addr, data)
+            }
+        }
+        
+        function ReadDirect(sector) {
+            unsafe {
+                return Nova.memory.read(Nova.hardware.getDiskSectorAddress(sector))
+            }
+        }
+    }
+
+    // ---------------------------------------------------------
+    // KERNEL PANIC & BOOTLOADER
+    // ---------------------------------------------------------
+    function WriteBootloader(usb_drive_path) {
+        Nova.show("🔥 Writing Nova OS Bootloader to " + usb_drive_path)
+        boot_code = "unsafe { Nova.system.boot_from_silicon() }"
+        FileSystem.WriteDirect(0, boot_code) // Sector 0 is MBR
+        Nova.show("✅ USB is now Bootable with Nova OS.")
+    }
+}
+export NovaOS

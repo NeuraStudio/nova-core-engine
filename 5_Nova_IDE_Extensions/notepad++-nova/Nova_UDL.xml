@@ -1,0 +1,19 @@
+<NotepadPlus>
+    <UserLang name="Nova Script" ext="nova">
+        <Settings>
+            <Global caseIgnored="no" />
+            <TreatAsSymbol comment="yes" commentLine="yes" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Keywords1">function class interface enum struct if else switch case default for while repeat foreach import export try catch finally thread async on unsafe match return break</Keywords>
+            <Keywords name="Keywords2">true false null</Keywords>
+            <Keywords name="Keywords3">Nova.show Nova.ask.user Nova.ai Nova.hack Nova.system</Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" styleID="11" fgColor="000000" bgColor="FFFFFF" />
+            <WordsStyle name="KEYWORD1" styleID="5" fgColor="800080" bgColor="FFFFFF" fontStyle="1" />
+            <WordsStyle name="KEYWORD2" styleID="6" fgColor="0000FF" bgColor="FFFFFF" fontStyle="1" />
+            <WordsStyle name="KEYWORD3" styleID="7" fgColor="008000" bgColor="FFFFFF" fontStyle="1" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>

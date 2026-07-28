@@ -1,0 +1,59 @@
+// ═══════════════════════════════════════════════
+// MODULE: Nova Realtime Debugger
+// ENGINE: Nova IDE Core
+// ═══════════════════════════════════════════════
+
+import Nova.3_Nova_Syntax.Lexer
+import Nova.3_Nova_Syntax.RulesParser
+
+module Debugger {
+
+    class BreakpointManager {
+        breakpoints = []
+        
+        function Add(line_number) {
+            breakpoints.add(line_number)
+            Nova.show("🛑 Breakpoint added at line " + line_number)
+        }
+        
+        function Check(current_line, memory_state) {
+            if breakpoints.contains(current_line) {
+                Nova.show("⚠️ EXECUTION PAUSED AT LINE " + current_line)
+                DumpState(memory_state)
+                WaitForKeypress()
+            }
+        }
+
+        function DumpState(state) {
+            Nova.show("--- CURRENT MEMORY STATE ---")
+            foreach var in state.variables {
+                Nova.show(var.name + " = " + var.value)
+            }
+        }
+
+        function WaitForKeypress() {
+            // Natively hooks into OS keyboard events
+            while true {
+                key = Nova.system.get_keypress()
+                if key == "F5" {
+                    Nova.show("▶️ Continuing execution...")
+                    break
+                }
+            }
+        }
+    }
+
+    function AnalyzeCodeForWarnings(ast_tree) {
+        Nova.show("🔍 Running Static Analysis...")
+        foreach node in ast_tree {
+            if node.type == "UnsafeStmt" {
+                Nova.log.warning("Security Warning: Unsafe block detected. Bypassing memory protections.")
+            }
+            if node.type == "Assignment" && node.value == null {
+                Nova.log.warning("Null Reference Potential: Variable " + node.target + " assigned null.")
+            }
+        }
+        Nova.show("✅ Analysis Complete.")
+    }
+}
+export Debugger

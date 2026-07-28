@@ -1,0 +1,54 @@
+// ═══════════════════════════════════════════════
+// MODULE: Universal Import Resolver
+// ENGINE: Nova VM Core
+// ═══════════════════════════════════════════════
+
+import Nova.4_NUPM.AutoTranslator
+import Nova.3_Nova_Syntax.ErrorHandler
+
+module ImportResolver {
+
+    // 100% Seamless Python/JS package mapping
+    function Resolve(module_name) {
+        
+        // 1. Check if it is a Native Nova Module (e.g., Nova.ai)
+        if module_name.startsWith("Nova.") {
+            path = ConvertToNativePath(module_name)
+            return LoadAST(path)
+        }
+        
+        // 2. If external (e.g., import pandas), intercept and translate
+        Nova.show("🔍 External Dependency Detected: " + module_name)
+        
+        // Check if already translated and cached
+        cached_path = "4_NUPM/external_libs/" + module_name + ".nova"
+        
+        if !Nova.file.exists(cached_path) {
+            Nova.show("📦 Downloading & Translating '" + module_name + "' from Python PyPI/NPM...")
+            // Call NUPM to download Python package, AI translates to Nova, saves as .nova
+            status = await AutoTranslator.InstallPackage("python", module_name)
+            
+            if status != true {
+                ErrorHandler.Throw("ImportError", "Failed to translate external package: " + module_name, 0)
+            }
+        }
+
+        Nova.show("✅ Success: '" + module_name + "' loaded as native Nova Script!")
+        return LoadAST(cached_path)
+    }
+
+    function ConvertToNativePath(name) {
+        // e.g., Nova.ui -> 4_NUPM/standard_lib/Nova_ui.nova
+        return name.replace(".", "/") + ".nova"
+    }
+
+    unsafe function LoadAST(path) {
+        raw_code = Nova.file.read(path)
+        tokens = Lexer.Tokenize(raw_code)
+        ast = RulesParser.Parse(tokens)
+        // Load directly to memory
+        Nova.memory.write_ast(ast)
+        return true
+    }
+}
+export ImportResolver

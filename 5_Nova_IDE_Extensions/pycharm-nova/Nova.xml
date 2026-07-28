@@ -1,0 +1,20 @@
+<filetype binary="false" description="Nova Script Language" name="Nova">
+  <highlighting>
+    <options>
+      <option name="LINE_COMMENT" value="//" />
+      <option name="BLOCK_COMMENT_START" value="/*" />
+      <option name="BLOCK_COMMENT_END" value="*/" />
+    </options>
+    <keywords ignore_case="false">
+      <keyword name="function" /> <keyword name="class" /> <keyword name="if" /> <keyword name="else" /> 
+      <keyword name="import" /> <keyword name="export" /> <keyword name="return" /> <keyword name="unsafe" />
+      <keyword name="true" /> <keyword name="false" /> <keyword name="null" />
+    </keywords>
+    <keywords2>
+      <keyword name="Nova.show" /> <keyword name="Nova.ask.user" /> <keyword name="Nova.ai" /> <keyword name="Nova.hack" />
+    </keywords2>
+  </highlighting>
+  <extensionMap>
+    <mapping ext="nova" />
+  </extensionMap>
+</filetype>

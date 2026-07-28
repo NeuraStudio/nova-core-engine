@@ -1,0 +1,34 @@
+{
+    "name": "nova-script",
+    "displayName": "Nova Script Language",
+    "description": "Official VS Code extension for Nova Script (Direct Silicon Language).",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "contributes": {
+        "languages": [{
+            "id": "nova",
+            "aliases": ["Nova", "nova"],
+            "extensions": [".nova", ".nv"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "nova",
+            "scopeName": "source.nova",
+            "path": "./syntaxes/nova.tmLanguage.json"
+        }],
+        "snippets": [{
+            "language": "nova",
+            "path": "./snippets/nova.json"
+        }]
+    },
+    "syntax_rules_mapped_to_section_2": {
+        "keywords": ["function", "class", "interface", "enum", "struct", "if", "else", "switch", "case", "default", "for", "while", "repeat", "foreach", "import", "export", "try", "catch", "finally", "thread", "async", "on", "unsafe", "match"],
+        "types": ["List", "Set", "Tuple", "Map", "String", "Int"],
+        "comments": {
+            "lineComment": ["//", "#"],
+            "blockComment": ["/*", "*/"]
+        }
+    }
+}

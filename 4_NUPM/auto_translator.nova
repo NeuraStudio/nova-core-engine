@@ -1,0 +1,41 @@
+// ═══════════════════════════════════════════════
+// MODULE: NUPM Auto Translator
+// ENGINE: Nova AI Translation Core
+// ═══════════════════════════════════════════════
+
+module AutoTranslator {
+    
+    // दुनिया की टॉप लैंग्वेजेज की रजिस्ट्री
+    const REGISTRIES = { 
+        "python": "pypi.org", 
+        "javascript": "npmjs.com", 
+        "c++": "github",
+        "ruby": "rubygems"
+    }
+
+    // किसी भी लैंग्वेज के पैकेज को Nova में इंस्टॉल करने का फंक्शन
+    async function InstallPackage(language, package_name) {
+        try {
+            Nova.show("Targeting " + package_name + " from " + language + " ecosystem...")
+            
+            // 1. ओरिजिनल पैकेज डाउनलोड करना
+            raw_source = await Nova.network.download(REGISTRIES[language] + "/" + package_name)
+            
+            Nova.show("Translating source code to pure Nova Script...")
+            
+            // 2. AI से कोड को Nova सिंटैक्स में कन्वर्ट करना
+            nova_code = Nova.ai.translate(raw_source, "to_nova_grammar")
+            
+            // 3. पैकेज को Nova की एक्सटर्नल लाइब्रेरी में सेव करना
+            file_path = "4_NUPM/external_libs/" + package_name + ".nova"
+            Nova.file.write(file_path, nova_code)
+            
+            Nova.show("SUCCESS: " + package_name + " is now natively running in Nova Script!")
+            
+        } catch(error) {
+            Nova.log.error("Translation Failed: " + error)
+        }
+    }
+}
+
+export AutoTranslator

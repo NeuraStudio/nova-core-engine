@@ -1,0 +1,6 @@
+Package: nova-script
+Version: 1.0.0
+Architecture: all
+Maintainer: Javed <architect@neurastudio.com>
+Description: Nova Script - The Ultimate Silicon Level Programming Language
+ Includes 200+ hacking tools, 128-bit math, and direct hardware execution.

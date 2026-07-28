@@ -1,0 +1,47 @@
+// ═══════════════════════════════════════════════
+// MODULE: EBNF Rules Parser (Section 2 Logic)
+// ENGINE: Nova Syntax Core
+// ═══════════════════════════════════════════════
+
+module RulesParser {
+    
+    // Abstract Syntax Tree (AST) बनाने के लिए
+    function Parse(tokens) {
+        ast_tree = []
+        pointer = 0
+        
+        while pointer < tokens.length {
+            current_token = tokens[pointer]
+            
+            // 1. Variable Declaration & Assignment (name = "Javed")
+            if current_token.type == TokenType.Identifier && tokens[pointer+1].value == "=" {
+                ast_tree.add( ParseAssignment(tokens, pointer) )
+            }
+            // 2. Loop Parsing (for, while, repeat, foreach)
+            else if current_token.value == "repeat" {
+                ast_tree.add( ParseRepeatLoop(tokens, pointer) )
+            }
+            // 3. Low-Level Silicon Block (unsafe)
+            else if current_token.value == "unsafe" {
+                ast_tree.add( ParseUnsafeBlock(tokens, pointer) )
+            }
+            // 4. Function Declaration
+            else if current_token.value == "function" {
+                ast_tree.add( ParseFunction(tokens, pointer) )
+            }
+            
+            pointer++
+        }
+        
+        return ast_tree
+    }
+
+    // Detail Logic for Assignment Rule (lvalue "=" expression)
+    function ParseAssignment(tokens, pointer) {
+        var_name = tokens[pointer].value
+        value = tokens[pointer+2].value
+        return { nodeType: "Assignment", variable: var_name, data: value }
+    }
+}
+
+export RulesParser

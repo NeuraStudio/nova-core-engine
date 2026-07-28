@@ -1,0 +1,6 @@
+// My First Nova File
+name = "Javed"
+age = "16"
+Nova.show("System Booting...")
+Nova.show(name)
+Nova.show(age)
