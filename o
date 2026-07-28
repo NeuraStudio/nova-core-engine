@@ -1,0 +1,27 @@
+// ════════════════════════════════════════════════════════════════════════
+// NOVA SCRIPT - OFFICIAL INTERACTIVE CALCULATOR
+// Architect: Javed (Neura Studio)
+// ════════════════════════════════════════════════════════════════════════
+
+Nova.show("==========================================")
+Nova.show("   NOVA SILICON INTERACTIVE CALCULATOR    ")
+Nova.show("==========================================")
+
+// 1. Asking user for input values
+num1 = Nova.ask.user("Enter first number: ")
+op = Nova.ask.user("Enter operator (+, -, *, /): ")
+num2 = Nova.ask.user("Enter second number: ")
+
+Nova.show("--- COMPUTING RESULT ---")
+
+// 2. Executing math operation
+result = num1 op num2
+
+// 3. Displaying output
+Nova.show("Final Result: ")
+Nova.show(result)
+
+Nova.show("==========================================")
+Nova.show("     Calculation Finished Successfully!   ")
+Nova.show("==========================================")
+

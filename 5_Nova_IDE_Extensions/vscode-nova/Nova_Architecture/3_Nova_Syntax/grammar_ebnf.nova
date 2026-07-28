@@ -1,0 +1,52 @@
+// ═══════════════════════════════════════════════
+// SECTION 2 — FORMAL GRAMMAR (EBNF)
+// ═══════════════════════════════════════════════
+
+program = { statement } ;
+statement = declaration | assignment | expr_stmt | if_stmt | switch_stmt
+| for_stmt | while_stmt | repeat_stmt | foreach_stmt
+| function_decl | class_decl | interface_decl | enum_decl
+| struct_decl | module_decl | import_stmt | export_stmt
+| try_stmt | thread_stmt | async_stmt | event_stmt | unsafe_stmt ;
+declaration = [ "const" ] identifier "=" expression ;
+assignment = lvalue "=" expression ;
+lvalue = identifier { "." identifier | "[" expression "]" } ;
+if_stmt = "if" expression block [ "else" block ] ;
+switch_stmt = "switch" "(" expression ")" "{" { case_clause } [ default_clause ] "}" ;
+case_clause = "case" expression ":" { statement } [ "break" ] ;
+default_clause = "default" ":" { statement } ;
+for_stmt = "for" identifier "=" expression "to" expression block ;
+while_stmt = "while" expression block ;
+repeat_stmt = "repeat" expression block ;
+foreach_stmt = "foreach" identifier "in" expression block ;
+function_decl = "function" identifier [ generic_params ] "(" [ params ] ")" block ;
+generic_params = "<" identifier { "," identifier } ">" ;
+params = identifier { "," identifier } ;
+block = "{" { statement } "}" ;
+class_decl = "class" identifier [ ":" identifier ] "{" { member } "}" ;
+interface_decl = "interface" identifier "{" { function_sig } "}" ;
+enum_decl = "enum" identifier "{" identifier { "," identifier } "}" ;
+struct_decl = "struct" identifier "{" { identifier } "}" ;
+module_decl = "module" identifier block ;
+import_stmt = "import" qualified_name ;
+export_stmt = "export" identifier ;
+try_stmt = "try" block "catch" "(" identifier ")" block [ "finally" block ] ;
+thread_stmt = "thread" identifier block ;
+async_stmt = "async" function_decl ;
+event_stmt = "on" "." identifier block ;
+unsafe_stmt = "unsafe" block ; // opts INTO manual memory control for this block
+expression = assignment_expr ;
+assignment_expr = ternary_expr ;
+ternary_expr = logical_or_expr [ "?" expression ":" expression ] ;
+logical_or_expr = logical_and_expr { "||" logical_and_expr } ;
+logical_and_expr= equality_expr { "&&" equality_expr } ;
+equality_expr = relational_expr { ( "==" | "!=" ) relational_expr } ;
+relational_expr = additive_expr { ( "<" | ">" | "<=" | ">=" ) additive_expr } ;
+additive_expr = multiplicative_expr { ( "+" | "-" ) multiplicative_expr } ;
+multiplicative_expr = unary_expr { ( "*" | "/" | "%" | "^" ) unary_expr } ;
+unary_expr = [ "!" | "-" ] postfix_expr ;
+postfix_expr = primary_expr { "." identifier | "(" [ args ] ")" | "?." identifier | "??" expression } ;
+primary_expr = literal | identifier | "(" expression ")" | lambda_expr | match_expr ;
+lambda_expr = "(" [ params ] ")" "=>" ( expression | block ) ;
+match_expr = "match" "(" expression ")" "{" { "case" expression ":" statement } [ "default" ":" statement ] "}" ;
+qualified_name = identifier { "." identifier } ;

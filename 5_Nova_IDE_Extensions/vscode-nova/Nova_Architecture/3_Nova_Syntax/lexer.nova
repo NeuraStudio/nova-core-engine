@@ -1,0 +1,47 @@
+// ═══════════════════════════════════════════════
+// MODULE: Nova Lexer (Independent Tokenizer)
+// ENGINE: Nova Syntax Core
+// ═══════════════════════════════════════════════
+
+module Lexer {
+    
+    // टोकन के प्रकार डिफाइन करना
+    enum TokenType { Keyword, Identifier, Number, String, Operator, Comment }
+
+    // कीवर्ड्स की लिस्ट (Section 2 और 8 से)
+    const KEYWORDS = ["function", "class", "interface", "enum", "struct", "if", "else", "switch", "case", "for", "while", "repeat", "foreach", "import", "export", "async", "thread", "unsafe", "match"]
+
+    function Tokenize(source_code) {
+        tokens = []
+        lines = source_code.split("\n")
+        
+        foreach line in lines {
+            // 1. Comments को इग्नोर करना (तुम्हारे रूल के हिसाब से)
+            if line.startsWith("//") || line.startsWith("#") {
+                continue // कमेंट को छोड़ दो
+            }
+            
+            // 2. कोड को टुकड़ों में तोड़ना (Tokens)
+            words = line.split(" ")
+            foreach word in words {
+                token = createToken(word)
+                tokens.add(token)
+            }
+        }
+        
+        return tokens
+    }
+
+    // हर शब्द की पहचान करना कि वह क्या है
+    function createToken(word) {
+        if KEYWORDS.contains(word) {
+            return { type: TokenType.Keyword, value: word }
+        } else if word.isNumber() {
+            return { type: TokenType.Number, value: word }
+        } else {
+            return { type: TokenType.Identifier, value: word } // जैसे कि वेरिएबल का नाम
+        }
+    }
+}
+
+export Lexer

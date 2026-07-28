@@ -1,0 +1,25 @@
+// ==========================================
+//     NOVA SILICON INTERACTIVE CALCULATOR
+// ==========================================
+
+Nova.show("==========================================")
+Nova.show("   NOVA SILICON INTERACTIVE CALCULATOR  ")
+Nova.show("==========================================")
+
+// User Inputs
+num1 = Nova.ask.user("Enter first number: ")
+op   = Nova.ask.user("Enter operator (+, -, *, /): ")
+num2 = Nova.ask.user("Enter second number: ")
+
+Nova.show("--- COMPUTING RESULT ---")
+
+// Math Evaluation
+result = num1 op num2
+
+Nova.show("Final Calculated Result:")
+Nova.show(result)
+
+Nova.show("==========================================")
+Nova.show("     Calculation Finished Successfully!     ")
+Nova.show("==========================================")
+

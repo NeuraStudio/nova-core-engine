@@ -1,0 +1,227 @@
+#!/bin/bash
+set +H
+
+C_DEF='\033[0m'
+C_GREEN='\033[38;5;46m'   
+C_CYAN='\033[38;5;51m'    
+C_RED='\033[38;5;196m'    
+C_YELL='\033[38;5;226m'   
+C_PURP='\033[38;5;135m'   
+C_DARK='\033[38;5;238m'   
+C_ROOT='\033[38;5;160m'
+
+declare -A NOVA_MEM
+NUPM_EXT_DIR="$HOME/Nova_OS_Engine/4_Nova_Universal_Package_Manager/external_libs"
+
+get_ram() { free -m 2>/dev/null | awk '/Mem:/ {printf "%.1fGB / %.1fGB", $3/1024, $2/1024}' || echo "2.1GB / 4.0GB"; }
+get_cpu_temp() { local t=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null); if [ -z "$t" ]; then echo "41.5°C"; else echo | awk "BEGIN { printf \"%.1f°C\", $t / 1000 }"; fi ; }
+get_arch() { uname -m 2>/dev/null || echo "aarch64"; }
+get_uptime() { uptime -p 2>/dev/null | sed 's/up //' || echo "2 days, 2 hours"; }
+get_isp() { curl -s --max-time 1.5 ipinfo.io/org 2>/dev/null | cut -d' ' -f2- || echo "Encrypted ISP"; }
+
+check_network() { 
+    if ping -q -c 1 -W 1 8.8.8.8 >/dev/null 2>&1; then 
+        export NET_MODE="ONLINE"; export PUB_IP=$(curl -s --max-time 1.5 ifconfig.me 2>/dev/null); export ISP_NAME=$(get_isp)
+    else 
+        export NET_MODE="OFFLINE"; export PUB_IP="127.0.0.1 (Air-Gapped)"; export ISP_NAME="Local Loopback"
+    fi 
+}
+
+if [ -z "$NOVA_MODE" ]; then export NOVA_MODE="STANDARD"; fi
+
+throw_error() {
+    echo -e "${C_RED}╭────────────────────────────────────────────────────────╮${C_DEF}"
+    echo -e "${C_RED}│ ❌ NOVA FATAL EXCEPTION                                │${C_DEF}"
+    echo -e "${C_RED}├────────────────────────────────────────────────────────┤${C_DEF}"
+    echo -e "${C_RED}│ Type    :${C_DEF} ${C_YELL}$1${C_DEF}"
+    echo -e "${C_RED}│ Details :${C_DEF} $2"
+    echo -e "${C_RED}│ Snippet :${C_DEF} ${C_CYAN}$3${C_DEF}"
+    echo -e "${C_RED}╰────────────────────────────────────────────────────────╯${C_DEF}"
+}
+
+highlight_syntax() {
+    local code="$1"
+    code=$(echo "$code" | sed -E -e "s/\b(function|class|interface|enum|struct|if|else|switch|case|default|for|while|repeat|foreach|import|export|try|catch|finally|thread|async|on|unsafe|match|return|break)\b/___PURP___\1___DEF___/g")
+    code=$(echo "$code" | sed -E -e "s/\b(Nova\.[a-zA-Z0-9_\.]+)/___CYAN___\1___DEF___/g")
+    code=$(echo "$code" | sed -E -e "s/\b(true|false)\b/___GREEN___\1___DEF___/g")
+    code=$(echo "$code" | sed -e "s/___PURP___/\\\\033[38;5;135m/g" -e "s/___CYAN___/\\\\033[38;5;51m/g" -e "s/___GREEN___/\\\\033[38;5;46m/g" -e "s/___DEF___/\\\\033[0m/g")
+    echo -e "$code"
+}
+
+run_hacker_tool() {
+    local tool=$1; local target=$2; if [ -z "$target" ]; then target="(No Target)"; fi
+    echo -e "${C_CYAN}⚙️ [SILICON_BRIDGE] Deploying protocol -> '${C_YELL}$tool${C_CYAN}' on target: ${C_RED}$target${C_DEF}"; sleep 0.3
+    case $tool in
+        scan|nmap|masscan|shodan) echo -e "  ${C_GREEN}[HEX_DUMP] ╰─➤ Ports 80, 443, 22 OPEN on $target${C_DEF}" ;;
+        sql|sqlmap|nikto) echo -e "  ${C_GREEN}[WEB_AUDIT] ╰─➤ Vulnerability verified. Target susceptible to Injection.${C_DEF}" ;;
+        brute|hydra|hashcat) echo -e "  ${C_GREEN}[DATA_STREAM] ╰─➤ Valid credentials located -> admin : root_secure${C_DEF}" ;;
+        *) echo -e "  ${C_RED}[ERROR] Tool simulation missing for '$tool'.${C_DEF}" ;;
+    esac
+}
+
+execute_code() {
+    local input=$(echo -e "$1" | tr -d '\n' | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    if [ -z "$input" ]; then return; fi
+    
+    # 1. SYNTAX CHECK: UNCLOSED STRINGS (Fixed Bug)
+    local double_quotes=$(echo "$input" | tr -cd '"' | wc -c)
+    if [ $((double_quotes % 2)) -ne 0 ]; then
+        throw_error "SyntaxError" "Unclosed string literal (\")." "$input"; return
+    fi
+
+    # 2. PACKAGE MANAGER CHECK (NUPM)
+    if [[ "$input" =~ ^nupm[[:space:]]+install[[:space:]]+(.*)$ ]]; then 
+        local pkg="${BASH_REMATCH[1]}"
+        echo -e "${C_PURP}[NUPM_CORE] ╰─➤ Downloading and translating '$pkg' to Nova Architecture...${C_DEF}"
+        mkdir -p "$NUPM_EXT_DIR/$pkg"
+        sleep 1
+        echo -e "${C_GREEN}[NUPM_CORE] ╰─➤ Package '$pkg' successfully installed into external_libs.${C_DEF}"; return
+    fi
+    
+    # 3. IMPORT LOGIC (Fixed Bug: Checks if package actually exists)
+    if [[ "$input" =~ ^import[[:space:]]+(Nova\.[a-zA-Z0-9_\.]+)$ ]]; then 
+        echo -e "${C_GREEN}[MODULE_LOADER] ╰─➤ Inbuilt Module '${BASH_REMATCH[1]}' loaded into Silicon RAM.${C_DEF}"; return
+    fi
+    
+    if [[ "$input" =~ ^import[[:space:]]+([a-zA-Z0-9_:\.\-]+)$ ]]; then 
+        local ext_pkg="${BASH_REMATCH[1]}"
+        if [ -d "$NUPM_EXT_DIR/$ext_pkg" ]; then
+            echo -e "${C_GREEN}[MODULE_LOADER] ╰─➤ External Module '$ext_pkg' loaded into Silicon RAM.${C_DEF}"
+        else
+            throw_error "ModuleNotFoundError" "Package '$ext_pkg' is not installed. Use 'nupm install $ext_pkg' first." "$input"
+        fi
+        return
+    fi
+
+    first_word=$(echo "$input" | awk '{print $1}')
+    local tools_regex="^(scan|nmap|masscan|shodan|sql|sqlmap|nikto|brute|hydra|hashcat|msf|metasploit|nc|ghidra)$"
+    if [[ "$first_word" =~ $tools_regex ]]; then
+        target=$(echo "$input" | awk '{print $2}'); run_hacker_tool "$first_word" "$target"; return
+    fi
+
+    if [[ "$input" == *"("* ]] && [[ "$input" != *")"* ]]; then throw_error "SyntaxError" "Missing closing parenthesis ')'." "$input"; return; fi
+    if [[ "$input" == *"{"* ]] && [[ "$input" != *"}"* ]]; then throw_error "SyntaxError" "Missing closing bracket '}'." "$input"; return; fi
+
+    if [[ "$input" =~ ^([a-zA-Z_][a-zA-Z0-9_]*)[[:space:]]*=[[:space:]]*Nova\.ask\.user[[:space:]]*\((.*)\)$ ]]; then
+        local var_name="${BASH_REMATCH[1]}"; local prompt_text=$(echo "${BASH_REMATCH[2]}" | sed -e 's/^["'\'']//' -e 's/["'\'']$//')
+        read -e -p "$(echo -e "${C_YELL}[SYS_INPUT] ╰─➤  $prompt_text ${C_DEF}")" user_val
+        NOVA_MEM["$var_name"]="$user_val"; echo -e "${C_DARK}[RAM_ALLOC] ╰─➤  (Stored '$user_val' in 0x${var_name^^})${C_DEF}"; return
+    fi
+
+    if [[ "$input" =~ ^([a-zA-Z_][a-zA-Z0-9_]*)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
+        local var_name="${BASH_REMATCH[1]}"; local var_value=$(echo "${BASH_REMATCH[2]}" | sed -e 's/^["'\'']//' -e 's/["'\'']$//')
+        NOVA_MEM["$var_name"]="$var_value"; echo -e "${C_DARK}[RAM_ALLOC] ╰─➤  (Stored '$var_value' in 0x${var_name^^})${C_DEF}"; return
+    fi
+
+    if echo "$input" | grep -q -E "^Nova\.show[[:space:]]*\("; then
+        local var_req=$(echo "$input" | sed -n 's/.*Nova\.show[[:space:]]*([[:space:]]*\(.*\)[[:space:]]*).*/\1/p' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+        if [[ -z "$var_req" ]]; then throw_error "NullReferenceException" "Nova.show() cannot be empty." "$input"; return; fi
+        
+        if [[ "$var_req" == \"*\" ]] || [[ "$var_req" == \'*\' ]]; then 
+            out=$(echo "$var_req" | sed -e 's/^["'\'']//' -e 's/["'\'']$//')
+        else 
+            if [[ -v NOVA_MEM["$var_req"] ]]; then out="${NOVA_MEM[$var_req]}"; else throw_error "VariableNotFound" "Variable '$var_req' is not mapped in Silicon RAM." "$input"; return; fi
+        fi
+        echo -e "${C_GREEN}[DATA_STREAM] ╰─➤  ${C_CYAN}$out${C_DEF}"; return
+    fi
+    
+    local eval_str="$input"
+    for key in "${!NOVA_MEM[@]}"; do eval_str=$(echo "$eval_str" | sed "s/\b$key\b/${NOVA_MEM[$key]}/g"); done
+    eval_str=$(echo "$eval_str" | sed 's/×/*/g')
+
+    if echo "$eval_str" | grep -qE "^[0-9]+[ \t]*=[ \t]*[0-9]+$"; then throw_error "SyntaxError" "Use '==' for comparison. Single '=' is for assignment." "$input"; return; fi
+
+    if echo "$eval_str" | grep -qE "^[0-9]+[ \t]*(==|!=|<=|>=|<|>)[ \t]*[0-9]+$"; then
+        local res=$(awk "BEGIN { if ($eval_str) print \"true\"; else print \"false\" }" 2>/dev/null)
+        if [ "$res" == "true" ]; then echo -e "${C_GREEN}[LOGIC_CORE] ╰─➤  ${C_GREEN}true${C_DEF}"; else echo -e "${C_GREEN}[LOGIC_CORE] ╰─➤  ${C_RED}false${C_DEF}"; fi; return
+    fi
+    
+    if echo "$eval_str" | grep -qE "^[0-9]+[ \t]*[\+\*\/\%\^\-][ \t]*[0-9]+$"; then
+        local expr=$(echo "$eval_str" | sed 's/\^/**/g'); local res=$(echo "$expr" | bc 2>/dev/null || awk "BEGIN { printf \"%.0f\", $expr }" 2>/dev/null)
+        if [ -z "$res" ]; then throw_error "MathException" "Invalid mathematical expression." "$input"; return; fi
+        echo -e "${C_YELL}[MATH_CORE] ╰─➤  $res${C_DEF}"; return
+    fi
+    
+    echo -e "${C_DARK}[COMPILER] ╰─➤  (Syntax Parsed & Mapped to VM)${C_DEF}"
+}
+
+print_header() {
+    clear
+    echo -e "${C_GREEN}"
+    echo " ███╗   ██╗ ██████╗ ██╗   ██╗ █████╗ "
+    echo " ████╗  ██║██╔═══██╗██║   ██║██╔══██╗"
+    echo " ██╔██╗ ██║██║   ██║██║   ██║███████║"
+    echo " ██║╚██╗██║██║   ██║╚██╗ ██╔╝██╔══██║"
+    echo " ██║ ╚████║╚██████╔╝ ╚████╔╝ ██║  ██║"
+    echo " ╚═╝  ╚═══╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝${C_DEF}"
+    echo -e "${C_PURP}       Neura Studio | Architect: Javed (16)${C_DEF}"
+    echo -e "${C_DARK}══════════════════════════════════════════════════════════════${C_DEF}"
+    echo -e "${C_CYAN} [©] Copyright 2026 Neura Studio. All Rights Reserved.${C_DEF}"
+    
+    if [ "$NET_MODE" == "ONLINE" ]; then
+        echo -e "${C_RED} [!] SECURE UPLINK ESTABLISHED. ONLINE MODE: [${NOVA_MODE}]${C_DEF}"
+    else
+        echo -e "${C_YELL} [!] AIR-GAPPED NETWORK. OFFLINE MODE: [${NOVA_MODE}]${C_DEF}"
+    fi
+    
+    echo -e "${C_DARK} ──────────────────────────────────────────────────────────────${C_DEF}"
+    echo -e "${C_CYAN} 🌍 IP   : ${C_GREEN}$PUB_IP        ${C_CYAN} 📡 ISP : ${C_GREEN}$ISP_NAME"
+    echo -e "${C_CYAN} 💾 RAM  : ${C_GREEN}$(get_ram)   ${C_CYAN} 🔥 CPU : ${C_GREEN}$(get_cpu_temp)"
+    echo -e "${C_CYAN} ⏱️  Up   : ${C_GREEN}$(get_uptime)     ${C_CYAN} 🖥️  Arch : ${C_GREEN}$(get_arch)${C_DEF}"
+    echo -e "${C_DARK}══════════════════════════════════════════════════════════════${C_DEF}"
+    echo -e " Try: ${C_YELL}'scan 127.0.0.1'${C_DEF}, ${C_YELL}'import Nova.ai'${C_DEF}, ${C_YELL}'nova run <file>'${C_DEF}"
+    echo -e "${C_DARK}══════════════════════════════════════════════════════════════${C_DEF}"
+}
+
+if [ "$1" == "run" ] && [ -n "$2" ]; then
+    if [ -f "$2" ]; then
+        echo -e "${C_CYAN}⚙️ [SILICON_CORE] Booting Nova File Engine...${C_DEF}"
+        echo -e "${C_PURP}[*] Compiling: $2${C_DEF}"
+        echo -e "${C_DARK}──────────────────────────────────────────────────────────────${C_DEF}"
+        while IFS= read -r line || [ -n "$line" ]; do
+            cleaned=$(echo "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+            if [[ -z "$cleaned" ]] || [[ "$cleaned" == "//"* ]] || [[ "$cleaned" == "#"* ]]; then continue; fi
+            execute_code "$cleaned"
+            sleep 0.05
+        done < "$2"
+        echo -e "${C_DARK}──────────────────────────────────────────────────────────────${C_DEF}"
+        echo -e "${C_GREEN}[✔] Execution Finished Safely.${C_DEF}"
+        exit 0
+    else
+        echo -e "${C_RED}[FATAL] ╰─➤ FileError: '$2' not found.${C_DEF}"
+        exit 1
+    fi
+fi
+
+check_network
+print_header
+BUFFER=""; BRACKETS=0
+
+while true; do
+    if [ $BRACKETS -gt 0 ]; then PROMPT="${C_DARK} ... ${C_DEF}"
+    else
+        if [ "$NOVA_MODE" == "HACKER" ]; then PROMPT="${C_RED}root@nova-hack${C_DEF} ⚡ "
+        elif [ "$NOVA_MODE" == "AI" ]; then PROMPT="${C_CYAN}ai@nova-neural${C_DEF} ⚡ "
+        # FIXED BUG: Changed NOVA:WEB to NOVA:CORE
+        else PROMPT="${C_DARK}[${C_GREEN}NOVA:CORE${C_DARK}] ${C_ROOT}root@silicon${C_DEF} ⚡ "; fi
+    fi
+    
+    read -e -p "$(echo -ne "$PROMPT")" input
+    
+    if [ "$input" == "exit" ]; then break; fi
+    if [ "$input" == "clear" ]; then check_network; print_header; continue; fi
+    if [[ "$input" == mode* ]]; then export NOVA_MODE=$(echo "$input" | cut -d' ' -f2 | tr '[:lower:]' '[:upper:]'); echo -e "${C_GREEN}[+] Engine switched to $NOVA_MODE mode.${C_DEF}"; sleep 0.5; print_header; continue; fi
+    if [ -z "$input" ] && [ $BRACKETS -eq 0 ]; then continue; fi
+
+    open_b=$(echo "$input" | grep -o "{" | wc -l); close_b=$(echo "$input" | grep -o "}" | wc -l)
+    BRACKETS=$((BRACKETS + open_b - close_b)); BUFFER="$BUFFER$input\n"
+    
+    if [ $BRACKETS -le 0 ]; then
+        echo -e "${C_DARK}--------------------------------------------------${C_DEF}"
+        highlight_syntax "$BUFFER"
+        echo -e "${C_DARK}--- Output ---${C_DEF}"
+        execute_code "$BUFFER"
+        echo -e "${C_DARK}--------------------------------------------------${C_DEF}\n"
+        BUFFER=""; BRACKETS=0
+    fi
+done

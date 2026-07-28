@@ -1,0 +1,212 @@
+// ═══════════════════════════════════════════════
+// SECTION 8 — OLD WORKED SYNTAX (as originally authored)
+// ═══════════════════════════════════════════════
+// VARIABLES / CONSTANTS
+name = "Javed"
+age = 16
+height = 175.5
+online = true
+const PI = 3.1415926535
+const COMPANY = "Neura Studio"
+
+// INPUT / OUTPUT
+name= Nova.ask.user("name:")
+Nova.show(name)
+Nova.show("Hello World")
+
+// MATH / COMPARISON / LOGICAL
+Nova.show(A+B) ; Nova.show(A-B) ; Nova.show(A*B) ; Nova.show(A/B) ; Nova.show(A%B) ; Nova.show(A^B)
+A == B, A != B, A > B, A < B, A >= B, A <= B
+&&, ||, !
+
+// IF / SWITCH
+if age >= 18 { Nova.show("Adult") } else { Nova.show("Child") }
+switch(day) {
+case "Monday": Nova.show("Work") break
+case "Friday": Nova.show("Holiday") break
+default: Nova.show("Unknown")
+}
+
+// LOOPS
+for i=1 to 100 { Nova.show(i) }
+while health>0 { health-- }
+repeat 10 { Nova.show("Hello") }
+foreach player in players { Nova.show(player) }
+
+// FUNCTIONS
+function Welcome(name) { Nova.show(name) }
+function Add(a,b) { return a+b }
+
+// COLLECTIONS
+players = ["Javed", "Ali", "Khan"]
+List users
+users.add("Javed") ; users.remove("Ali")
+user = { name:"Javed", age:16 }
+Set fruits
+fruits.add("Apple")
+Tuple location=(20,40)
+
+// OOP
+class Human { name
+function Speak() { Nova.show("Hello") } }
+human = Human()
+human.Speak()
+class Student : Human { roll }
+interface Animal { function Speak() }
+enum Status { Online, Offline, Busy }
+struct User { name, age }
+
+// MODULES
+module Login { function Start() { Nova.show("Login") } }
+import Nova.ai
+import Nova.web
+import Nova.database
+export Login
+
+// ERROR HANDLING / CONCURRENCY / EVENTS
+try { Nova.file.read("data.txt") } catch(error) { Nova.show(error) } finally { Nova.show("Done") }
+thread Download { Nova.network.download(file) }
+async function Load() { await Nova.database.find() }
+on.start { Nova.show("Started") }
+on.exit { Nova.show("Bye") }
+
+// GENERICS / LAMBDAS / PATTERN MATCH / NULL SAFETY
+List<String> users ; List<Int> numbers ; Map<String,User> database
+function Print<T>(value) { Nova.show(value) }
+square = (x) => x*x
+users.filter(user => user.age>=18)
+numbers.sort((a,b) => a>b)
+match(status) {
+case Success: Nova.show("Done")
+case Error: Nova.show("Failed")
+default: Nova.show("Unknown")
+}
+user?.name
+database?.connect()
+value ?? "Unknown"
+if value exists { Nova.show(value) }
+
+// ANNOTATIONS / MACROS / COMPILER DIRECTIVES
+@Public, @Private, @Deprecated, @Test, @AI
+@Optimize("O3"), @Inline, @NoInline, @Experimental, @Platform("Windows")
+macro LOG(message) { Nova.log.info(message) }
+LOG("Hello")
+
+// COMMENTS
+// single line
+# also single line
+/* multi
+line */
+
+// ═══════════════════════════════════════════════
+// SECTION 8.5 — 50 NEW GRAMMAR-TRACEABLE EXAMPLES
+// ═══════════════════════════════════════════════
+// 1. declaration → identifier "=" expression
+score = 100
+// 2. declaration → "const" identifier "=" expression
+const MAX_PLAYERS = 4
+// 3. assignment → lvalue "=" expression (lvalue = plain identifier)
+health = 50
+// 4. assignment → lvalue "=" expression (lvalue = identifier "." identifier)
+player.health = 80
+// 5. assignment → lvalue "=" expression (lvalue = identifier "[" expression "]")
+inventory[0] = "sword"
+// 6. expr_stmt → postfix_expr (bare call statement)
+Nova.show("system ready")
+// 7. if_stmt → "if" expression block (no else)
+if online { Nova.show("connected") }
+// 8. if_stmt → "if" expression block "else" block
+if score >= 50 { Nova.show("pass") } else { Nova.show("fail") }
+// 9. switch_stmt with two case_clause + default_clause
+switch(role) {
+case "admin": Nova.show("full access") break
+case "guest": Nova.show("read only") break
+default: Nova.show("unknown role")
+}
+// 10. for_stmt → "for" identifier "=" expression "to" expression block
+for i=1 to 10 { Nova.show(i) }
+// 11. while_stmt → "while" expression block
+while ammo>0 { ammo-- }
+// 12. repeat_stmt → "repeat" expression block
+repeat 5 { Nova.show("tick") }
+// 13. foreach_stmt → "foreach" identifier "in" expression block
+foreach item in inventory { Nova.show(item) }
+// 14. function_decl → "function" identifier "(" params ")" block, no generics
+function Greet(name) { Nova.show(name) }
+// 15. function_decl with generic_params
+function First<T>(list) { return list[0] }
+// 16. function_decl with return via additive_expr
+function Sum(a,b) { return a+b }
+// 17. function_decl, zero params
+function Ping() { Nova.show("pong") }
+// 18. class_decl, no inheritance
+class Weapon { name
+function Fire() { Nova.show("bang") } }
+// 19. class_decl with inheritance (":" identifier)
+class Sniper : Weapon { scope }
+// 20. interface_decl → "interface" identifier "{" function_sig "}"
+interface Shooter { function Fire() }
+// 21. enum_decl → "enum" identifier "{" identifier list "}"
+enum Rank { Bronze, Silver, Gold, Platinum }
+// 22. struct_decl → "struct" identifier "{" identifier list "}"
+struct Coordinates { x, y, z }
+// 23. module_decl → "module" identifier block
+module Inventory { function Add(item) { Nova.show(item) } }
+// 24. import_stmt → "import" qualified_name
+import Nova.robotics
+// 25. export_stmt → "export" identifier
+export Inventory
+// 26. try_stmt full form: try/catch/finally
+try { Nova.database.connect("NovaDB") } catch(err) { Nova.show(err) } finally { Nova.show("closed") }
+// 27. thread_stmt → "thread" identifier block
+thread Sync { Nova.cloud.sync() }
+// 28. async_stmt → "async" function_decl
+async function FetchUser() { await Nova.database.find.one() }
+// 29. event_stmt → "on" "." identifier block
+on.start { Nova.show("engine boot") }
+// 30. unsafe_stmt → "unsafe" block (Section 5 low-level mode)
+unsafe { addr = Nova.memory.allocate(256) }
+// 31. ternary_expr → logical_or_expr "?" expression ":" expression
+label = age >= 18 ? "adult" : "minor"
+// 32. logical_or_expr → logical_and_expr "||" logical_and_expr
+canEnter = hasTicket || isVIP
+// 33. logical_and_expr → equality_expr "&&" equality_expr
+canFire = hasAmmo && !isReloading
+// 34. equality_expr → relational_expr "==" relational_expr
+isMax = score == 100
+// 35. equality_expr → relational_expr "!=" relational_expr
+changed = oldValue != newValue
+// 36. relational_expr, all four comparison operators exercised
+Nova.show(a<b) ; Nova.show(a>b) ; Nova.show(a<=b) ; Nova.show(a>=b)
+// 37. additive_expr → multiplicative_expr "+" multiplicative_expr
+total = price + tax
+// 38. additive_expr → multiplicative_expr "-" multiplicative_expr
+remaining = stock - sold
+// 39. multiplicative_expr → unary_expr "*" unary_expr
+area = width * height
+// 40. multiplicative_expr → unary_expr "/" unary_expr
+average = total / count
+// 41. multiplicative_expr → unary_expr "%" unary_expr
+isEven = value % 2
+// 42. multiplicative_expr → unary_expr "^" unary_expr (power)
+squared = base ^ 2
+// 43. unary_expr → "!" postfix_expr
+isOffline = !online
+// 44. unary_expr → "-" postfix_expr
+inverted = -velocity
+// 45. postfix_expr → primary_expr "." identifier (member access)
+username = user.name
+// 46. postfix_expr → primary_expr "(" args ")" (call)
+Nova.robot.move.forward(5)
+// 47. postfix_expr → primary_expr "?." identifier (safe navigation)
+city = profile?.address?.city
+// 48. postfix_expr → primary_expr "??" expression (null coalesce)
+displayName = nickname ?? "Guest"
+// 49. lambda_expr → "(" params ")" "=>" expression
+double = (x) => x*2
+// 50. match_expr → "match" "(" expression ")" "{" case ... default "}"
+match(connectionState) {
+case Connected: Nova.show("online")
+case Disconnected: Nova.show("offline")
+default: Nova.show("unknown")
+}

@@ -2,7 +2,7 @@
   "name": "nova-script",
   "displayName": "Nova Script Language Pack",
   "description": "Full Silicon Engine Runtime, NUPM, and 200+ Hacking Tools.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "NeuraStudio",
   "icon": "icon.png",
   "engines": { "vscode": "^1.75.0" },

@@ -1,0 +1,25 @@
+// ═══════════════════════════════════════════════
+// MODULE: Entry Point Interpreter
+// ENGINE: Nova VM Core
+// ═══════════════════════════════════════════════
+
+import Nova.2_Nova_VM.MasterVMCore
+
+module NovaInterpreter {
+    
+    vm_instance = MasterVMCore.OmniVM()
+
+    async function RunFile(filepath) {
+        if !Nova.file.exists(filepath) {
+            Nova.show("[FATAL] File missing.")
+            return
+        }
+        raw_code = Nova.file.read(filepath)
+        await vm_instance.ExecuteRaw(raw_code)
+    }
+
+    async function RunLive(raw_code) {
+        await vm_instance.ExecuteRaw(raw_code)
+    }
+}
+export NovaInterpreter
