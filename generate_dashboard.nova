@@ -1,0 +1,15 @@
+// ==========================================
+//   NOVA NATIVE CYBER UI ENGINE
+// ==========================================
+
+Nova.show("Initializing Nova Native Web UI Compiler...")
+
+app_title = "Nova Cyber Intelligence Hub"
+app_version = "v1.1.0-Silicon"
+node_count = "200"
+security_status = "99% SECURE"
+
+Nova.show("Synthesizing Cyberpunk HTML Frontend...")
+
+// Natively writing the HTML dashboard directly from Nova Engine
+// (No external dependencies required)

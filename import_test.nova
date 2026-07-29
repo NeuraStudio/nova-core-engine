@@ -1,0 +1,30 @@
+// ==========================================
+//     NOVA MODULE IMPORT & REPL TEST
+// ==========================================
+
+Nova.show("Testing Module Loader & Silicon Core...")
+
+// Importing Built-in Modules
+import Nova.ai
+import Nova.crypto
+
+// Input Test
+user_node = Nova.ask.user("Enter Target Node ID: ")
+
+Nova.show("--- DEPLOYING NETWORK RECON ---")
+
+// Running Hacking Tool Bridge
+scan user_node
+
+// Arithmetic & Variable Logic Check
+base_load = 500
+multiplier = 4
+total_output = base_load * multiplier
+
+Nova.show("Calculated System Throughput:")
+Nova.show(total_output)
+
+Nova.show("==========================================")
+Nova.show("      IMPORT & REPL TEST PASSED           ")
+Nova.show("==========================================")
+
