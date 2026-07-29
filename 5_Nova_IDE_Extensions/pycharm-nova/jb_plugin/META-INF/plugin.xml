@@ -1,0 +1,10 @@
+<idea-plugin>
+  <id>com.neurastudio.nova</id>
+  <name>Nova Script Language</name>
+  <version>1.1.0</version>
+  <vendor url="https://github.com/NeuraStudio">NeuraStudio</vendor>
+  <description>Official Nova Hacker OS Syntax and Language Support by Architect Javed.</description>
+  <extensions defaultExtensionNs="com.intellij">
+    <fileType name="Nova" implementationClass="com.intellij.openapi.fileTypes.PlainTextFileType" extensions="nova"/>
+  </extensions>
+</idea-plugin>

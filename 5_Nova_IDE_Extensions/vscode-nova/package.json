@@ -1,1 +1,29 @@
-{"name":"nova-script","displayName":"Nova Script IDE","description":"Neura Studio Official Architecture","version":"1.1.0","publisher":"NeuraStudio","engines":{"vscode":"^1.60.0"},"categories":["Programming Languages"],"contributes":{"languages":[{"id":"nova","extensions":[".nova"],"aliases":["Nova","nova"]}],"grammars":[{"language":"nova","scopeName":"source.nova","path":"./syntaxes/nova.tmLanguage.json"}]}}
+{
+  "name": "nova-script",
+  "displayName": "Nova Script IDE",
+  "description": "The Official Hacker OS Silicon Language Extension by Architect Javed.",
+  "version": "1.1.0",
+  "publisher": "NeuraStudio",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nova",
+        "aliases": ["Nova", "nova"],
+        "extensions": [".nova"]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nova",
+        "scopeName": "source.nova",
+        "path": "./syntaxes/nova.tmLanguage.json"
+      }
+    ]
+  }
+}

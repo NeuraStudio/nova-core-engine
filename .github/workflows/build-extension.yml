@@ -1,4 +1,4 @@
-name: Build Nova VS Code Extension
+name: Build Nova VS Code Extension (Official Cloud Compiler)
 
 on:
   push:
@@ -15,27 +15,22 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22.x'
+        node-version: '20.x'
 
-    - name: Install VSCE Compiler
+    - name: Install Official VSCE
       run: npm install -g @vscode/vsce
 
-    - name: Fix Missing Files & Build the VSIX Package
+    - name: Compile Valid VSIX
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
-        
-        # 1. Fix LICENSE & README Error
-        echo "MIT License - Copyright 2026 NeuraStudio" > LICENSE.md
-        echo "# Nova Script Extension" > README.md
-        
-        # 2. Fix Icon Error (Generates a valid 1x1 invisible PNG file dynamically)
-        echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" | base64 -d > icon.png
-        
-        # 3. Compile & Bypass Repository Error
-        vsce package --allow-missing-repository
+        # Ensure mandatory files exist
+        if [ ! -f "README.md" ]; then echo "# Nova Script" > README.md; fi
+        if [ ! -f "LICENSE.md" ]; then echo "MIT License" > LICENSE.md; fi
+        # Let official vsce handle manifest generation and packaging
+        vsce package --allow-missing-repository --out nova-script-official.vsix
 
-    - name: Upload Valid VSIX Artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Valid-Nova-Extension
+        name: Nova-Official-VSIX
         path: 5_Nova_IDE_Extensions/vscode-nova/*.vsix
