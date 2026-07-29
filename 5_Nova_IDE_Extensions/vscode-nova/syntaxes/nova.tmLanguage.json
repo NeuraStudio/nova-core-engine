@@ -5,24 +5,43 @@
     { "include": "#comments" },
     { "include": "#modes" },
     { "include": "#keywords" },
+    { "include": "#functions" },
     { "include": "#strings" },
     { "include": "#constants" }
   ],
   "repository": {
     "comments": {
-      "patterns": [{ "name": "comment.line.double-slash.nova", "match": "//.*$" }]
+      "patterns": [
+        { "name": "comment.line.double-slash.nova", "match": "//.*$" },
+        { "name": "comment.block.nova", "begin": "/\\*", "end": "\\*/" }
+      ]
     },
     "modes": {
-      "patterns": [{ "name": "storage.modifier.mode.nova", "match": "@(Hacker|AI|Web|OS|Crypto|Standard)\\b" }]
+      "patterns": [
+        { "name": "keyword.other.mode.nova", "match": "@(Hacker|AI|Web|OS|Crypto|Standard)\\b" }
+      ]
     },
     "keywords": {
-      "patterns": [{ "name": "keyword.control.nova", "match": "\\b(function|module|import|export|if|else|while|return|const|struct|unsafe|scan|nupm)\\b" }]
+      "patterns": [
+        { "name": "keyword.control.nova", "match": "\\b(function|module|import|export|if|else|while|return|const|struct|unsafe|match)\b" }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        { "name": "support.function.nova", "match": "\\b(Nova\\.show|Nova\\.ask\\.user|scan|nmap|sqlmap|nupm)\\b" }
+      ]
     },
     "strings": {
-      "patterns": [{ "name": "string.quoted.double.nova", "begin": "\"", "end": "\"" }]
+      "patterns": [
+        { "name": "string.quoted.double.nova", "begin": "\"", "end": "\"" },
+        { "name": "string.quoted.single.nova", "begin": "'", "end": "'" }
+      ]
     },
     "constants": {
-      "patterns": [{ "name": "constant.numeric.nova", "match": "\\b\\d+\\b" }]
+      "patterns": [
+        { "name": "constant.numeric.nova", "match": "\\b\\d+\\b" },
+        { "name": "constant.language.boolean.nova", "match": "\\b(true|false)\\b" }
+      ]
     }
   }
 }

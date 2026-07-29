@@ -1,47 +1,48 @@
 {
-  "Nova Hacker Mode Block": {
+  "Nova Hacker Mode": {
     "prefix": "nmode-hacker",
     "body": [
       "@Hacker",
-      "function ${1:TargetScan}() {",
-      "    scan \"${2:127.0.0.1}\"",
-      "    $0",
-      "}"
+      "// [SYSTEM MODE]: Active Hacker Reconnaissance & Security Audit",
+      "scan \"${1:127.0.0.1}\"",
+      "$0"
     ],
-    "description": "Trigger Nova @Hacker Mode for Security Audits"
+    "description": "Switch context to @Hacker mode and trigger live scan"
   },
-  "Nova AI Neural Mode": {
+  "Nova AI Neural Core": {
     "prefix": "nmode-ai",
     "body": [
       "@AI",
+      "// [SYSTEM MODE]: Neural Tensor Processing & AI Core",
       "import Nova.ai",
-      "model = Nova.ai.load(\"${1:tensor_core}\");",
+      "model = Nova.ai.load_tensor(\"${1:core_v1}\");",
       "$0"
     ],
-    "description": "Trigger Nova @AI Mode for Neural Processing"
+    "description": "Switch context to @AI mode for machine learning"
   },
-  "Nova Web UI Mode": {
+  "Nova Web UI Generator": {
     "prefix": "nmode-web",
     "body": [
       "@Web",
-      "server_port = ${1:8080};",
-      "Nova.show(\"Serving Nova UI on port \" + server_port);",
+      "// [SYSTEM MODE]: Cyberpunk Native Frontend Synthesis",
+      "app_title = \"${1:Nova Cyber Intelligence Hub}\";",
+      "server_port = 8080;",
       "$0"
     ],
-    "description": "Trigger Nova @Web Mode"
+    "description": "Switch context to @Web mode for server and UI generation"
   },
-  "Nova Show Output": {
+  "Nova Print Stream": {
     "prefix": "nshow",
     "body": [
       "Nova.show(\"$1\");"
     ],
-    "description": "Output text to Nova Silicon Stream"
+    "description": "Print output to Silicon Data Stream (Python print equivalent)"
   },
-  "Nova User Input": {
+  "Nova Secure Input": {
     "prefix": "ninput",
     "body": [
       "$1 = Nova.ask.user(\"$2: \");"
     ],
-    "description": "Prompt user for input securely"
+    "description": "Prompt dynamic user input into RAM"
   }
 }
