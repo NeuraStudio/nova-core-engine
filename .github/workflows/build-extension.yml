@@ -20,20 +20,18 @@ jobs:
     - name: Install Official VSCE Compiler globally
       run: npm install -g @vscode/vsce
 
-    - name: Compile VSIX on GitHub Cloud
+    - name: Compile VSIX on GitHub Cloud with Embedded Icon
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
         
-        # Ensure icon.png exists
-        if [ ! -f icon.png ]; then
-          echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" | base64 -d > icon.png
-        fi
-
-        # Run official vsce packaging tool
+        echo "=== VERIFYING EMBEDDED ICON ==="
+        ls -lh icon.png
+        
+        # Package directly using official vsce compiler
         vsce package --allow-missing-repository --out nova-script-v2.0.0.vsix
 
-    - name: Upload Artifact to GitHub
+    - name: Upload Verified Artifact v2.0.0
       uses: actions/upload-artifact@v4
       with:
-        name: Nova-VSCode-Extension-v2.0.0-Official
+        name: Nova-VSCode-Extension-v2.0.0
         path: 5_Nova_IDE_Extensions/vscode-nova/*.vsix
