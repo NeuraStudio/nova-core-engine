@@ -1,11 +1,13 @@
 <idea-plugin>
-  <id>com.neurastudio.nova</id>
-  <name>Nova Script</name>
-  <vendor>NeuraStudio</vendor>
-  <description>Official Nova Language Syntax Highlighting for JetBrains IDEs.</description>
-  <version>1.1.0</version>
-  <idea-version since-build="211.0"/>
+  <id>com.neurastudio.nova.script</id>
+  <name>Nova Script IDE</name>
+  <version>1.2.0</version>
+  <vendor email="javed@neurastudio.com" url="https://github.com/NeuraStudio">NeuraStudio</vendor>
+  <description><![CDATA[
+    The Official Hacker OS Silicon Language Extension by Architect Javed. Features Python-like syntax highlighting, auto-indentation, and 200+ Hacking Tools bridge.
+  ]]></description>
+  <depends>com.intellij.modules.platform</depends>
   <extensions defaultExtensionNs="com.intellij">
-    <fileType name="Nova" implementationClass="com.intellij.openapi.fileTypes.PlainTextFileType" extensions="nova"/>
+    <fileType name="NovaScript" implementationClass="com.intellij.openapi.fileTypes.PlainTextFileType" fieldName="INSTANCE" language="Nova" extensions="nova"/>
   </extensions>
 </idea-plugin>

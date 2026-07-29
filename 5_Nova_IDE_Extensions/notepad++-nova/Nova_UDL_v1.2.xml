@@ -1,0 +1,24 @@
+<NotepadPlus>
+    <UserLang name="Nova Script" ext="nova">
+        <Settings>
+            <Global caseIgnored="no" />
+            <Prefix Keywords1="no" Keywords2="no" Keywords3="no" Keywords4="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Keywords1">Nova.show Nova.ask.user scan nmap sqlmap hydra import nupm</Keywords>
+            <Keywords name="Keywords2">true false function class if else while return</Keywords>
+            <Keywords name="Comments">0// 1/* 2*/</Keywords>
+            <Keywords name="Numbers"></Keywords>
+            <Keywords name="Operators">= + - * / == != &lt; &gt;</Keywords>
+            <Keywords name="Folder in">+ {</Keywords>
+            <Keywords name="Folder out">- }</Keywords>
+        </Settings>
+        <Styles>
+            <Style name="DEFAULT" styleID="11" color="00FF41" bgColor="000000" fontName="Courier New" fontStyle="1" />
+            <Style name="COMMENT" styleID="1" color="7F7F7F" bgColor="000000" fontName="Courier New" fontStyle="2" />
+            <Style name="KEYWORD1" styleID="5" color="00FFFF" bgColor="000000" fontName="Courier New" fontStyle="1" />
+            <Style name="KEYWORD2" styleID="6" color="FF00FF" bgColor="000000" fontName="Courier New" fontStyle="1" />
+            <Style name="OPERATOR" styleID="10" color="FFFF00" bgColor="000000" fontName="Courier New" fontStyle="1" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>

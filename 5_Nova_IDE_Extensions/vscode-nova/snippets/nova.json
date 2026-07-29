@@ -1,22 +1,47 @@
 {
-  "Nova Output": {
-    "prefix": "show",
-    "body": "Nova.show(\"$1\")",
-    "description": "Print output to Nova silicon data stream"
+  "Nova Hacker Mode Block": {
+    "prefix": "nmode-hacker",
+    "body": [
+      "@Hacker",
+      "function ${1:TargetScan}() {",
+      "    scan \"${2:127.0.0.1}\"",
+      "    $0",
+      "}"
+    ],
+    "description": "Trigger Nova @Hacker Mode for Security Audits"
+  },
+  "Nova AI Neural Mode": {
+    "prefix": "nmode-ai",
+    "body": [
+      "@AI",
+      "import Nova.ai",
+      "model = Nova.ai.load(\"${1:tensor_core}\");",
+      "$0"
+    ],
+    "description": "Trigger Nova @AI Mode for Neural Processing"
+  },
+  "Nova Web UI Mode": {
+    "prefix": "nmode-web",
+    "body": [
+      "@Web",
+      "server_port = ${1:8080};",
+      "Nova.show(\"Serving Nova UI on port \" + server_port);",
+      "$0"
+    ],
+    "description": "Trigger Nova @Web Mode"
+  },
+  "Nova Show Output": {
+    "prefix": "nshow",
+    "body": [
+      "Nova.show(\"$1\");"
+    ],
+    "description": "Output text to Nova Silicon Stream"
   },
   "Nova User Input": {
-    "prefix": "ask",
-    "body": "$1 = Nova.ask.user(\"$2: \")",
-    "description": "Take secure input from user terminal"
-  },
-  "Hacker Tool Scan": {
-    "prefix": "scan",
-    "body": "scan $1",
-    "description": "Execute native hacker tool scan protocol"
-  },
-  "Module Import": {
-    "prefix": "imp",
-    "body": "import Nova.$1",
-    "description": "Import built-in or external module into Silicon RAM"
+    "prefix": "ninput",
+    "body": [
+      "$1 = Nova.ask.user(\"$2: \");"
+    ],
+    "description": "Prompt user for input securely"
   }
 }

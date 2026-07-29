@@ -1,38 +1,28 @@
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "Nova",
+  "scopeName": "source.nova",
+  "fileTypes": ["nova"],
   "patterns": [
     { "include": "#comments" },
+    { "include": "#modes" },
     { "include": "#keywords" },
     { "include": "#strings" },
-    { "include": "#constants" },
-    { "include": "#builtins" }
+    { "include": "#constants" }
   ],
   "repository": {
     "comments": {
-      "patterns": [
-        { "match": "(//|#).*$", "name": "comment.line.nova" },
-        { "begin": "/\\*", "end": "\\*/", "name": "comment.block.nova" }
-      ]
+      "patterns": [{ "name": "comment.line.double-slash.nova", "match": "//.*$" }]
+    },
+    "modes": {
+      "patterns": [{ "name": "storage.modifier.mode.nova", "match": "@(Hacker|AI|Web|OS|Crypto|Standard)\\b" }]
     },
     "keywords": {
-      "match": "\\b(function|class|interface|enum|struct|if|else|switch|case|default|for|while|repeat|foreach|import|export|try|catch|finally|thread|async|on|unsafe|match|return|break)\\b",
-      "name": "keyword.control.nova"
-    },
-    "constants": {
-      "match": "\\b(true|false|null)\\b",
-      "name": "constant.language.nova"
-    },
-    "builtins": {
-      "match": "\\b(Nova\\.[a-zA-Z0-9_\\.]+)\\b",
-      "name": "support.function.nova"
+      "patterns": [{ "name": "keyword.control.nova", "match": "\\b(function|module|import|export|if|else|while|return|const|struct|unsafe|scan|nupm)\\b" }]
     },
     "strings": {
-      "patterns": [{
-        "begin": "\"", "end": "\"",
-        "name": "string.quoted.double.nova"
-      }]
+      "patterns": [{ "name": "string.quoted.double.nova", "begin": "\"", "end": "\"" }]
+    },
+    "constants": {
+      "patterns": [{ "name": "constant.numeric.nova", "match": "\\b\\d+\\b" }]
     }
-  },
-  "scopeName": "source.nova"
+  }
 }
