@@ -1,4 +1,4 @@
-name: Build Nova VS Code Extension (Official Cloud Compiler)
+name: Build Nova Official Extensions
 
 on:
   push:
@@ -17,20 +17,37 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Install Official VSCE
+    - name: Install VSCE Compiler
       run: npm install -g @vscode/vsce
 
-    - name: Compile Valid VSIX
+    - name: Build VS Code VSIX Package
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
-        # Ensure mandatory files exist
-        if [ ! -f "README.md" ]; then echo "# Nova Script" > README.md; fi
-        if [ ! -f "LICENSE.md" ]; then echo "MIT License" > LICENSE.md; fi
-        # Let official vsce handle manifest generation and packaging
-        vsce package --allow-missing-repository --out nova-script-official.vsix
+        # Ensure proper files exist
+        echo "# Nova Script" > README.md
+        echo "MIT License" > LICENSE.md
+        vsce package --allow-missing-repository --out nova-script.vsix
 
-    - name: Upload Artifact
+    - name: Build PyCharm Plugin Package
+      run: |
+        cd 5_Nova_IDE_Extensions/pycharm-nova
+        mkdir -p META-INF
+        cat << 'PLUG' > META-INF/plugin.xml
+        <idea-plugin>
+          <id>com.neurastudio.nova</id>
+          <name>Nova Script</name>
+          <version>1.1.0</version>
+          <vendor>NeuraStudio</vendor>
+          <description>Official Nova Language Syntax and Support for PyCharm</description>
+          <depends>com.intellij.modules.platform</depends>
+        </idea-plugin>
+        PLUG
+        zip -r ../nova-pycharm-plugin.zip META-INF/ ../Nova.xml
+
+    - name: Upload Final Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Nova-Official-VSIX
-        path: 5_Nova_IDE_Extensions/vscode-nova/*.vsix
+        name: Nova-Official-Extensions
+        path: |
+          5_Nova_IDE_Extensions/vscode-nova/*.vsix
+          5_Nova_IDE_Extensions/pycharm-nova/*.zip
