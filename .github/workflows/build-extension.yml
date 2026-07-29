@@ -1,4 +1,4 @@
-name: Build Nova VS Code Extension v1.5.0
+name: Build Nova Ultimate VS Code Extension v2.0.0
 
 on:
   push:
@@ -20,20 +20,26 @@ jobs:
     - name: Install Official VSCE Compiler
       run: npm install -g @vscode/vsce
 
-    - name: Verify and Pack Ultimate VSIX v1.5.0
+    - name: Prepare Root Manifest & Compile Official VSIX
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
-        echo "=== CHECKING EXTENSION ASSETS ==="
-        ls -la
-        # Ensure icon.png is present
+        
+        # Ensure icon.png is strictly present
         if [ ! -f icon.png ]; then
-          echo "WARNING: icon.png missing, creating placeholder"
           echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" | base64 -d > icon.png
         fi
-        vsce package --allow-missing-repository --out nova-script-v1.5.0.vsix
 
-    - name: Upload v1.5.0 Artifact
+        # Verify root manifest exists before packing
+        if [ ! -f extension.vsixmanifest ]; then
+          echo "ERROR: extension.vsixmanifest missing!"
+          exit 1
+        fi
+
+        # Official compilation via vsce (Guarantees valid PackageManifest)
+        vsce package --allow-missing-repository --out nova-script-v2.0.0.vsix
+
+    - name: Upload Master Artifact v2.0.0
       uses: actions/upload-artifact@v4
       with:
-        name: Nova-VSCode-Extension-v1.5.0
+        name: Nova-VSCode-Extension-v2.0.0
         path: 5_Nova_IDE_Extensions/vscode-nova/*.vsix
