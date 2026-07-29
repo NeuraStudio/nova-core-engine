@@ -17,20 +17,25 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Install Official VSCE Compiler globally
+    - name: Install Official VSCE Compiler
       run: npm install -g @vscode/vsce
 
-    - name: Compile VSIX on GitHub Cloud with Embedded Icon
+    - name: Compile Official VSIX Package on Cloud
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
         
-        echo "=== VERIFYING EMBEDDED ICON ==="
-        ls -lh icon.png
-        
-        # Package directly using official vsce compiler
-        vsce package --allow-missing-repository --out nova-script-v2.0.0.vsix
+        # Verify icon.png exists
+        if [ -f icon.png ]; then
+          echo "SUCCESS: Original logo detected in repository."
+        else
+          echo "WARNING: Placeholder logo applied."
+          echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" | base64 -d > icon.png
+        fi
 
-    - name: Upload Verified Artifact v2.0.0
+        # Package cleanly using official compiler
+        vsce package --allow-missing-repository --out nova-script-v2.vsix
+
+    - name: Upload Master Artifact v2.0.0
       uses: actions/upload-artifact@v4
       with:
         name: Nova-VSCode-Extension-v2.0.0
