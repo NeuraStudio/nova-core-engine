@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-file/2013/manifest">
   <Metadata>
-    <Identity Language="en-US" Id="nova-script" Version="2.0.0" Publisher="NeuraStudio"/>
-    <DisplayName>Nova Script IDE</DisplayName>
+    <Identity Language="en-US" Id="nova-script-v2" Version="2.0.0" Publisher="NeuraStudio"/>
+    <DisplayName>Nova Script IDE v2</DisplayName>
     <Description xml:space="preserve">The Official Hacker OS Silicon Language Extension by Architect Javed.</Description>
     <Categories>Programming Languages</Categories>
     <Icon>icon.png</Icon>
