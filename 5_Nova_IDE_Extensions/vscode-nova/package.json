@@ -15,7 +15,8 @@
       {
         "id": "nova",
         "aliases": ["Nova", "nova"],
-        "extensions": [".nova"]
+        "extensions": [".nova"],
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
