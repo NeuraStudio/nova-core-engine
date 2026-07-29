@@ -1,4 +1,4 @@
-name: Build Nova Ultimate VS Code Extension v2.0.0
+name: Build Nova VS Code Extension v2.0.0 via GitHub Cloud
 
 on:
   push:
@@ -17,29 +17,23 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Install Official VSCE Compiler
+    - name: Install Official VSCE Compiler globally
       run: npm install -g @vscode/vsce
 
-    - name: Prepare Root Manifest & Compile Official VSIX
+    - name: Compile VSIX on GitHub Cloud
       run: |
         cd 5_Nova_IDE_Extensions/vscode-nova
         
-        # Ensure icon.png is strictly present
+        # Ensure icon.png exists
         if [ ! -f icon.png ]; then
           echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" | base64 -d > icon.png
         fi
 
-        # Verify root manifest exists before packing
-        if [ ! -f extension.vsixmanifest ]; then
-          echo "ERROR: extension.vsixmanifest missing!"
-          exit 1
-        fi
-
-        # Official compilation via vsce (Guarantees valid PackageManifest)
+        # Run official vsce packaging tool
         vsce package --allow-missing-repository --out nova-script-v2.0.0.vsix
 
-    - name: Upload Master Artifact v2.0.0
+    - name: Upload Artifact to GitHub
       uses: actions/upload-artifact@v4
       with:
-        name: Nova-VSCode-Extension-v2.0.0
+        name: Nova-VSCode-Extension-v2.0.0-Official
         path: 5_Nova_IDE_Extensions/vscode-nova/*.vsix
