@@ -1,0 +1,22 @@
+{
+  "Nova Output": {
+    "prefix": "show",
+    "body": "Nova.show(\"$1\")",
+    "description": "Print output to Nova silicon data stream"
+  },
+  "Nova User Input": {
+    "prefix": "ask",
+    "body": "$1 = Nova.ask.user(\"$2: \")",
+    "description": "Take secure input from user terminal"
+  },
+  "Hacker Tool Scan": {
+    "prefix": "scan",
+    "body": "scan $1",
+    "description": "Execute native hacker tool scan protocol"
+  },
+  "Module Import": {
+    "prefix": "imp",
+    "body": "import Nova.$1",
+    "description": "Import built-in or external module into Silicon RAM"
+  }
+}

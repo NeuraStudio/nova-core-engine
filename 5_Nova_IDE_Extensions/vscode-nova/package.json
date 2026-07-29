@@ -1,14 +1,17 @@
 {
   "name": "nova-script",
   "displayName": "Nova Script IDE",
-  "description": "The Official Hacker OS Silicon Language Extension by Architect Javed.",
+  "description": "The Ultimate Hacker OS Silicon Language Extension with 200+ Tools & NUPM Support.",
   "version": "1.1.0",
   "publisher": "NeuraStudio",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.60.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Snippets",
+    "Keymaps"
   ],
   "contributes": {
     "languages": [
@@ -24,6 +27,12 @@
         "language": "nova",
         "scopeName": "source.nova",
         "path": "./syntaxes/nova.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "nova",
+        "path": "./snippets/nova.json"
       }
     ]
   }
