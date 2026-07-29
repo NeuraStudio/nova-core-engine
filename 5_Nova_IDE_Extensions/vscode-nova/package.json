@@ -2,7 +2,7 @@
   "name": "nova-script",
   "displayName": "Nova Script IDE",
   "description": "The Official Hacker OS Silicon Language Extension by Architect Javed with Live @Modes, Python Shortcuts, and 200+ Tools.",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "publisher": "NeuraStudio",
   "icon": "icon.png",
   "engines": {
