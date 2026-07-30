@@ -1,0 +1,37 @@
+name: Build Nova Installers (Win/Mac/Linux)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Build Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller customtkinter Pillow
+
+    - name: Compile OS-Specific Binary
+      run: |
+        cd 7_Nova_GUI_Installer
+        pyinstaller --noconsole --onefile --windowed --icon=assets/nova_logo.png --name "Nova_Installer_${{ runner.os }}" nova_installer.py
+
+    - name: Upload Installer Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Nova_Installer_${{ runner.os }}
+        path: 7_Nova_GUI_Installer/dist/*
