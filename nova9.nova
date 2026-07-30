@@ -1,0 +1,52 @@
+// Nova Demo Program
+
+import Nova.ai
+import Nova.database
+
+const APP = "Nova Demo"
+
+class User {
+
+    function Welcome(name) {
+        Nova.show("Welcome " + name)
+    }
+
+}
+
+function Add(a, b) {
+    return a + b
+}
+
+name = Nova.ask.user("Enter your name : ")
+age = Nova.ask.user("Enter your age : ")
+
+user = User()
+user.Welcome(name)
+
+result = Add(20, 30)
+
+if age >= 18 {
+    Nova.show("Adult User")
+} else {
+    Nova.show("Child User")
+}
+
+numbers = [10, 20, 30]
+
+foreach value in numbers {
+    Nova.show(value)
+}
+
+async function LoadAI() {
+    await Nova.ai.start()
+}
+
+try {
+    LoadAI()
+}
+catch(error) {
+    Nova.show(error)
+}
+
+Nova.show("Result = " + result)
+Nova.show("Program Finished")
