@@ -1,0 +1,37 @@
+name: Build Nova PyCharm Plugin v2.0.0 via Cloud
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Prepare PyCharm Plugin Structure & Logo
+      run: |
+        cd 5_Nova_IDE_Extensions/pycharm-nova
+        mkdir -p META-INF
+        
+        # Copy the exact same original logo from VS Code extension to PyCharm
+        if [ -f ../vscode-nova/icon.png ]; then
+          cp ../vscode-nova/icon.png META-INF/pluginIcon.png
+          echo "SUCCESS: Original logo embedded for PyCharm!"
+        else
+          echo "WARNING: Logo not found in vscode directory."
+        fi
+
+    - name: Package Official JetBrains ZIP
+      run: |
+        cd 5_Nova_IDE_Extensions
+        zip -r Nova-PyCharm-Plugin-v2.0.0.zip pycharm-nova/*
+
+    - name: Upload PyCharm Master Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Nova-PyCharm-Plugin-v2.0.0
+        path: 5_Nova_IDE_Extensions/Nova-PyCharm-Plugin-v2.0.0.zip
