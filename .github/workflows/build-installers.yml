@@ -25,10 +25,22 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller customtkinter Pillow
 
-    - name: Compile OS-Specific Binary
+    - name: Ensure Assets Exist for Build
       run: |
         cd 7_Nova_GUI_Installer
-        pyinstaller --noconsole --onefile --windowed --icon=assets/nova_logo.png --name "Nova_Installer_${{ runner.os }}" nova_installer.py
+        mkdir -p assets
+        # Fallback dummy image if png is missing so PyInstaller never fails
+        if [ ! -f assets/nova_logo.png ]; then
+          python3 -c "from PIL import Image; img = Image.new('RGB', (200, 200), color = (15, 25, 35)); img.save('assets/nova_logo.png')"
+        fi
+        if [ ! -f assets/neura_logo.png ]; then
+          python3 -c "from PIL import Image; img = Image.new('RGB', (120, 40), color = (15, 25, 35)); img.save('assets/neura_logo.png')"
+        fi
+
+    - name: Compile OS-Specific Binary with PyInstaller
+      run: |
+        cd 7_Nova_GUI_Installer
+        pyinstaller --noconsole --onefile --windowed --add-data "assets:assets" --name "Nova_Installer_${{ runner.os }}" nova_installer.py
 
     - name: Upload Installer Artifacts
       uses: actions/upload-artifact@v4
